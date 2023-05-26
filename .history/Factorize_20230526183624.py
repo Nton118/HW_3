@@ -1,5 +1,5 @@
 import logging
-from multiprocessing import Process, Manager, cpu_count
+from multiprocessing import Process, Manager, cpu_count, Pool
 from time import time
 
 
@@ -14,11 +14,12 @@ def pr_factors(num, m: Manager):
 
 
 def factorize_proc(*number): 
-    timer = time()  
+    timer = time()
+    cores = cpu_count()  
     with Manager() as manager:
         m = manager.list()
-        processes = [] 
-        for n in number:
+        with Pool(cores) as p:
+            p.map_async(pr_factors,)
             pr = Process(target=pr_factors, name=f"pr{n}", args=(n, m, ))
             pr.start()
             processes.append(pr)
